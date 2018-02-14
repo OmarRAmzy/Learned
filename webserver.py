@@ -76,7 +76,7 @@ class webserverHandler (BaseHTTPRequestHandler):
                 restaurants = session.query(Restaurant).all()
 
                 self.send_response(200)
-                self.send_header('Content-type' , 'text/html')
+                self.send_header('Content-type', 'text/html')
                 self.end_headers()
                 output = ""
                 output += "<html> <body>"
@@ -95,35 +95,6 @@ class webserverHandler (BaseHTTPRequestHandler):
                 return
 
 
-            if self.path.endswith("/Hello"):
-                self.send_response(200)
-                self.send_header('contact-type', 'text/html')
-                self.end_headers()
-                output = ""
-                output += "<html> <body> <h1> Hello! <h1>"
-                output += "<form method = 'POST' enctype='multipart/form-data' action ='/Hello' " \
-                          "> <h2> what would you like me to say? </h2> <input name ='message' " \
-                          "type = 'text'> <input type = 'submit' value = 'Submit'>  </form>"
-                output += " </body> </html> "
-                self.wfile.write(output)
-                print output
-                return
-            if self.path.endswith("/Hola"):
-                self.send_response(200)
-                self.send_header('contact-type', 'text/html')
-                self.end_headers()
-                output = ""
-                output += "<html> <body> <h1> Hola! </h1>  " \
-                          "<a href = '\Hello'> Back to Hello </a> "
-                output += "<form method = 'POST' enctype='multipart/form-data' action ='/Hello' " \
-                          "> <h2> what would you like me to say? </h2> <input name ='message' " \
-                          "type = 'text'> <input type = 'submit' value = 'Submit'>  </form>"
-                output += " </body> </html> "
-
-
-                self.wfile.write(output)
-                print output
-                return
 
         except IOError:
                 self.send_error(404, "File Not Found %s" % self.path)
@@ -177,6 +148,7 @@ class webserverHandler (BaseHTTPRequestHandler):
             self.send_header('Location' , '/restaurants')
             self.end_headers()
             return
+
 
         except:
            pass

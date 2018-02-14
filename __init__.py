@@ -12,13 +12,10 @@ session.add(MyFirstRestaurant)
 session.commit()
 session.query(Restaurant).all()
 
-name = "feter"
-desc = "Sogok"
-price = "$ 4"
+name = "Cheiken"
 
 
-F = MenuItem(name = name , description=desc , price =price ,
-                  restaurant=MyFirstRestaurant)
+F = MenuItem(name = name , restaurant_id=2)
 session.add(F)
 session.commit()
 session.query(MenuItem).all()
