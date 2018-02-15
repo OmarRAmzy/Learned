@@ -12,19 +12,25 @@ session = DBSession()
 
 app = Flask(__name__)
 
-@app.route('/')
-@app.route('/resturants')
-def get_resturants():
-    
-    resturatnts = session.query(Restaurant).all()
-    output = ''
-    for i in resturatnts:
-        output += '<html> <body> <h1> '
-        output += i.name
-        output += ' </h1>'
-        output += '</body> </html>'
 
-    return output
+@app.route('/')
+@app.route('/restaurants')
+def Restaurants():
+    restaurants = session.query(Restaurant).all()
+    return render_template('Restaurants.html' , Restaurants=restaurants )
+
+# @app.route('/resturants')
+# def get_resturants():
+#
+#     resturatnts = session.query(Restaurant).all()
+#     output = ''
+#     for i in resturatnts:
+#         output += '<html> <body> <h1> '
+#         output += i.name
+#         output += ' </h1>'
+#         output += '</body> </html>'
+#
+#     return output
 
 
 @app.route('/items')
@@ -56,7 +62,7 @@ def get_resturant_id (res_id):
 
     return output
 
-@app.route('/items/<int:rest_id>/')
+@app.route('/Restaurantitems/<int:rest_id>/')
 def get_items_id (rest_id):
     #resturatnts = session.query(Restaurant).first()
     items = session.query(MenuItem).filter_by(restaurant_id =rest_id)
@@ -73,23 +79,46 @@ def get_items_id (rest_id):
     return output
 
 
-@app.route('/restaurants/<int:res_id>/new/')
-def new_menu_item (res_id):
-    F = MenuItem(name = 'White Chocalate Cake', description='Black & white Chocalte' , price='$2.5' , restaurant_id=1 )
-    session.add(F)
-    session.commit()
-    session.query(MenuItem).all
-    return "New Item Added"
+# @app.route('/restaurants/<int:res_id>/new/')
+# def newMenuItem (res_id):
+#     F = MenuItem(name = 'White Chocalate Cake', description='Black & white Chocalte' , price='$2.5' , restaurant_id=1 )
+#     session.add(F)
+#     session.commit()
+#     session.query(MenuItem).all
+#     return "New Item Added"
 
 
-@app.route('/itemshtml/<int:rest_id>/')
-def get_items_id_templates (rest_id):
+
+@app.route('/items/<int:rest_id>/')
+def restaurantMenu (rest_id):
     restaurant = session.query(Restaurant).filter_by(id = rest_id).one()
     items = session.query(MenuItem).filter_by(restaurant_id =rest_id)
 
     return render_template('Menu.html' , Restaurant = restaurant , items = items)
 
-@app.route()
+
+@app.route('/restaurant/<int:rest_id>/new', methods = ['GET' , 'POST'])
+def newMenuItem(rest_id):
+    if request.method == 'POST':
+        newItem = MenuItem(name = request.form['name'] , description= request.form['description']
+                           , restaurant_id=rest_id)
+        session.add(newItem)
+        session.commit()
+        return redirect(url_for('restaurantMenu' , rest_id = rest_id))
+    else:
+        return render_template('newMenuItem.html' , rest_id = rest_id)
+
+
+@app.route('/restaurant/<int:rest_id>/<int:menu_id>/edit/')
+def editMenuItem(rest_id , menu_id):
+    return
+
+
+@app.route('/restaurant/<int:rest_id>/<int:menu_id>/delete/')
+def deleteMenuItem(rest_id , menu_id):
+    return
+
+
 
 if __name__ == '__main__':
     app.debug = True

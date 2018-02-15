@@ -1,1 +1,15 @@
-<
+<html>
+<body>
+
+<h1> New Menu Item </h1>
+	
+	<form action="{{url_for('newMenuItem' , rest_id = rest_id )}}" method='post' >
+	 
+	Name	<input type='text' name='name' >
+	</br>
+	Description	<input type='text' name='description' >
+	<input type = 'submit' value='create'>
+	</form>
+
+</body>
+</html>
