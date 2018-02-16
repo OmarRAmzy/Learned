@@ -1,3 +1,5 @@
+import sqlite3
+
 from flask import Flask , redirect ,render_template ,request ,url_for
 
 from database_setup import Base , Restaurant , MenuItem
@@ -10,6 +12,8 @@ Base.metadata.bind = engine
 DBSession = sessionmaker (bind=engine)
 session = DBSession()
 
+conn = sqlite3.connect('restaurantmenu.db')
+
 app = Flask(__name__)
 
 
@@ -17,6 +21,7 @@ app = Flask(__name__)
 @app.route('/restaurants')
 def Restaurants():
     restaurants = session.query(Restaurant).all()
+  #  restaurants= conn.execute("Select * from Restaurant")
     return render_template('Restaurants.html' , Restaurants=restaurants )
 
 # @app.route('/resturants')
@@ -108,6 +113,23 @@ def newMenuItem(rest_id):
     else:
         return render_template('newMenuItem.html' , rest_id = rest_id)
 
+@app.route('/Restaurants/new' , methods=['GET' , 'POST'])
+def newRestaurant():
+    if request.method == 'POST':
+        newRestaurant = Restaurant(name = request.form['name'])
+        session.add(newRestaurant)
+        session.commit()
+        return redirect(url_for('Restaurants'))
+    else:
+        return render_template('newRestaurant.html')
+
+@app.route('/Restaurants/<int:rest_id>/delete' , methods = ['POST' , 'GET'])
+def deleteRestaurant(rest_id):
+    restaurant = session.query(Restaurant).filter_by(id=rest_id).one()
+    session.delete(restaurant)
+    session.commit()
+
+    return redirect(url_for('Restaurants'))
 
 @app.route('/restaurant/<int:rest_id>/<int:menu_id>/edit/')
 def editMenuItem(rest_id , menu_id):
