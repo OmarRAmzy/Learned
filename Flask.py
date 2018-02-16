@@ -123,6 +123,7 @@ def newRestaurant():
     else:
         return render_template('newRestaurant.html')
 
+
 @app.route('/Restaurants/<int:rest_id>/delete' , methods = ['POST' , 'GET'])
 def deleteRestaurant(rest_id):
     restaurant = session.query(Restaurant).filter_by(id=rest_id).one()
@@ -131,9 +132,20 @@ def deleteRestaurant(rest_id):
 
     return redirect(url_for('Restaurants'))
 
-@app.route('/restaurant/<int:rest_id>/<int:menu_id>/edit/')
+
+@app.route('/restaurant/<int:rest_id>/<int:menu_id>/edit/' ,methods= ['POST' , 'GET'])
 def editMenuItem(rest_id , menu_id):
-    return
+    Item = session.query(MenuItem).filter_by(id=menu_id).one()
+    oldName = Item.name
+    print rest_id
+    if request.method == 'POST':
+        if request.form ['name']:
+            Item.name = request.form['name']
+        session.add(Item)
+        session.commit()
+        return redirect(url_for('restaurantMenu' , rest_id = rest_id))
+    else:
+        return render_template('editMenuItem.html' , rest_id = rest_id , menu_id = menu_id , i = Item)
 
 
 @app.route('/restaurant/<int:rest_id>/<int:menu_id>/delete/')
