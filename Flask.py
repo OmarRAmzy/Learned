@@ -1,6 +1,6 @@
 import sqlite3
 
-from flask import Flask , redirect ,render_template ,request ,url_for
+from flask import Flask , redirect ,render_template ,request ,url_for , jsonify
 
 from database_setup import Base , Restaurant , MenuItem
 from sqlalchemy import create_engine
